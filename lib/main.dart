@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_registeration/dependencies/services_binding.dart';
 import 'package:service_registeration/views/my_services.dart';
+import 'package:service_registeration/views/registration_data/service_detail.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +17,9 @@ class MyApp extends StatelessWidget {
 debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(name:"/services", page:()=>MyServices(),binding: ServicesBinding()),
+        GetPage(name:"/create_services", page:()=>CreateService()),
       ],
-      initialRoute: "/services",
+      initialRoute: "/create_services",
     );
   }
 }
