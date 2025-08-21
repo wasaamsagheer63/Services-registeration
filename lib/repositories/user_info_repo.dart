@@ -7,7 +7,7 @@ class UserInfoRepo{
   late final String userInfoEndPoint;
 
   UserInfoRepo({
-    this.userInfoEndPoint = "https://6848562eec44b9f34940977c.mockapi.io/shoe_store/s1/registration_form",});
+    this.userInfoEndPoint = "https://6848562eec44b9f34940977c.mockapi.io/user_info/s1/registration_form",});
 
 Future<void> uploadData(UserInfo userInfo)async{
   try{
