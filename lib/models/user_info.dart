@@ -1,5 +1,5 @@
 class UserInfo {
-  int id;
+
   String name;
   String service;
   String experienceLevel;
@@ -8,7 +8,6 @@ class UserInfo {
   String detail;
 
   UserInfo(
-    this.id,
     this.name,
     this.service,
     this.experienceLevel,
@@ -19,7 +18,6 @@ class UserInfo {
 
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
       "name": name,
       "service": service,
       "experienceLevel": experienceLevel,
@@ -31,7 +29,6 @@ class UserInfo {
 
   static UserInfo fromMap(Map<String, dynamic> map) {
     return UserInfo(
-      map["id"],
       map["name"],
       map["service"],
       map["experienceLevel"],
