@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -7,28 +11,81 @@ import 'package:service_registeration/repositories/user_info_repo.dart';
 
 class ServiceDetailViewModel extends GetxController {
   final UserInfoRepo userInfoRepo = Get.find();
+  late TextEditingController addressController ;
+
   RxString service = "".obs;
   RxBool showMap = false.obs;
   RxString experianceLevel = "".obs;
   bool emptyData = false;
   bool correctPrice = true;
-  LatLng? currentLocation ;
+  Rx<LatLng?> currentLocation = Rx<LatLng?>(null);
+  RxBool isMapLoading = false.obs;
+
+  MapController mapController = MapController();
+  RxString addressData ="".obs;
   late Position position;
 
-
+@override
   void onInit(){
     super.onInit();
-    getCurrentPosition();
-    currentLocation = LatLng(position.latitude, position.longitude);
-  }
-  Future<void> getCurrentPosition()async{
-    Position position = await Geolocator.getCurrentPosition();
-  }
-
-void dispose(){
-  super.dispose();
+    addressController =TextEditingController();
 
 }
+  Future<void> getCurrentPosition()async{
+  try {
+    isMapLoading.value = true;
+
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission != LocationPermission.denied) {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      currentLocation.value = LatLng(position.latitude, position.longitude);
+    getAddress(currentLocation.value!);
+
+    }
+  }
+  catch (e){
+    print("Error in current position getting ${e.toString()}");
+  }
+  finally{
+    isMapLoading.value = false;
+  }
+
+  }
+  Future<void> getAddress(LatLng centerPoint)async{
+List<Placemark> placemark = await placemarkFromCoordinates(
+    centerPoint.latitude,
+    centerPoint.longitude);
+if(placemark.isNotEmpty){
+  Placemark place = placemark[0];
+  addressData.value = "${place.street}, ${place.locality},${place.country}";
+  addressController.text= addressData.value;
+
+}
+else{
+  addressData.value ="Location is not selected";
+  addressController.text ="";
+
+}
+  }
+
+  Future<void> findLocation(String query)async{
+  if(query.isEmpty){
+    return;
+  }
+List<Location> location = await locationFromAddress(query);
+  if(location.isNotEmpty){
+      currentLocation.value = LatLng(location[0].latitude, location[0].longitude);
+      mapController.move(currentLocation.value!, 15);
+      getAddress(currentLocation.value!);
+    }
+  }
+
+
+
+
   Future<void> uploadData(
     String name,
     String price,
@@ -54,7 +111,7 @@ if(num.tryParse(price) == null){
   ));
 }
       UserInfo userInfo = UserInfo(name, service.value, experianceLevel.value, num.tryParse(price)??0.0, address, detail);
-     if(!emptyData && !correctPrice){
+     if(!emptyData && correctPrice){
       userInfoRepo.uploadData(userInfo);
      }
      else{

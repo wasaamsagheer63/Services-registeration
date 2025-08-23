@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_registeration/dependencies/services_binding.dart';
 import 'package:service_registeration/views/my_services.dart';
-import 'package:service_registeration/views/registration_data/service_detail_filling_form.dart';
+import 'package:service_registeration/views/registration_data/detail_form_view.dart';
 
 import 'dependencies/service_detail_bindings.dart';
 
