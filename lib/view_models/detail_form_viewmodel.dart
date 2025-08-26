@@ -7,10 +7,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:service_registeration/models/user_info.dart';
-import 'package:service_registeration/repositories/user_info_repo.dart';
+
+import '../http_clients/user_info_client.dart';
 
 class ServiceDetailViewModel extends GetxController {
-  final UserInfoRepo userInfoRepo = Get.find();
+  final UserInfoClient userInfoClient = Get.find();
   late TextEditingController addressController ;
 
   RxString service = "".obs;
@@ -29,6 +30,7 @@ class ServiceDetailViewModel extends GetxController {
   void onInit(){
     super.onInit();
     addressController =TextEditingController();
+    getCurrentPosition();
 
 }
   Future<void> getCurrentPosition()async{
@@ -86,7 +88,7 @@ List<Location> location = await locationFromAddress(query);
 
 
 
-  Future<void> uploadData(
+  Future<bool> uploadData(
     String name,
     String price,
     String address,
@@ -98,7 +100,7 @@ correctPrice = true;
 if(name.isEmpty || price.toString().isEmpty || address.isEmpty || detail.isEmpty || service.value.isEmpty || experianceLevel.value.isEmpty){
   emptyData = true;
 }
-if(num.tryParse(price) == null){
+if(num.tryParse(price) == null && price.length != 0){
   correctPrice = false;
   Get.snackbar("Error", "",messageText: Text(
     "Your price per hour data is not correct",
@@ -110,9 +112,11 @@ if(num.tryParse(price) == null){
     ),
   ));
 }
-      UserInfo userInfo = UserInfo(name, service.value, experianceLevel.value, num.tryParse(price)??0.0, address, detail);
+      UserInfo userInfo = UserInfo("",name, service.value, experianceLevel.value, num.tryParse(price)??0.0, address, detail);
      if(!emptyData && correctPrice){
-      userInfoRepo.uploadData(userInfo);
+      userInfoClient.uploadData(userInfo);
+      Get.toNamed("/upload_image",arguments: userInfo);
+      return true;
      }
      else{
        Get.snackbar("Error", "",messageText: Text(
@@ -126,6 +130,7 @@ if(num.tryParse(price) == null){
        ),colorText:Color.fromARGB(
            200, 255, 253, 253),backgroundColor:Color.fromARGB(
            200, 243, 12, 12));
+       return false;
      }
     }
     catch(e){

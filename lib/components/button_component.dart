@@ -13,8 +13,8 @@ class ButtonThemes{
         border: BoxBorder.fromLTRB(top:BorderSide(width: 2,color:Color.fromRGBO(
           186, 188, 186, 0.6,))),
         gradient: LinearGradient(colors:[Color.fromRGBO(
-          7, 120, 6, 1.0,),Color.fromRGBO(
-          6, 160, 6, 1.0,),Color.fromRGBO(2, 160, 2, 1.0,)],
+          9, 145, 8, 1.0,),Color.fromRGBO(
+          9, 193, 9, 1.0,),Color.fromRGBO(2, 160, 2, 1.0,)],
             begin: Alignment.bottomLeft,
             end: Alignment.topRight
 
@@ -30,6 +30,8 @@ class ButtonThemes{
         ),),
     );
   }
+
+
   Widget dropDownComponent(List<String> totalValues,String hintText, RxString selectedValue, Function(RxString?) onChanged,{bool service=false }){
 
     return DropdownButtonFormField(
@@ -55,5 +57,27 @@ class ButtonThemes{
         child:Text(item,style: TextStyle(color:Colors.black,fontSize:16,fontWeight: FontWeight.w400),))).toList() , onChanged:(value){
           selectedValue.value = value.toString() ?? "";
     });
+  }
+
+  Widget simpleButtonThemeComponent(
+
+      String buttonText,
+      Function onPressed,){
+    return Container(
+      decoration: BoxDecoration(
+        border: BoxBorder.all(width: 3,color:Color.fromRGBO(
+          3, 131, 3, 0.6,),),
+        borderRadius: BorderRadius.circular(30),
+      ),
+
+      child: ElevatedButton(onPressed: ()=>onPressed(),
+        child: Text(buttonText,style: TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Color.fromRGBO(
+          4, 138, 4, 0.6,)),),
+        style: ElevatedButton.styleFrom(
+          backgroundColor:Color.fromRGBO(
+            202, 204, 202, 0.13,),
+          shadowColor: Colors.transparent,
+        ),),
+    );
   }
 }

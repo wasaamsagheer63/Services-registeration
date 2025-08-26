@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:service_registeration/components/appbar_components.dart';
 import 'package:service_registeration/components/map_view.dart';
 import '../../components/button_component.dart';
 import '../../components/textfield_component.dart';
@@ -19,6 +20,7 @@ class CreateService extends GetView<ServiceDetailViewModel> {
   List<String> services = ["Electrician","Plumber","Carpenter"];
   List<String> experianceLevels = ["Biggner","Intermediate","Expert"];
   MapView mapView = MapView();
+  AppBarComponent appBarComponent = AppBarComponent();
 
 
   CreateService({super.key});
@@ -26,44 +28,13 @@ class CreateService extends GetView<ServiceDetailViewModel> {
   @override
   Widget build(BuildContext context) {
     return Obx(()=>Scaffold(
-      appBar: !controller.showMap.value?AppBar(
-        title: Text(
-          "Create Service",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-        ),
-        backgroundColor: Color.fromRGBO(250, 250, 250, 1.0),
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(Icons.arrow_back_ios_new_sharp, size: 22),
-        ),
-      ):AppBar( title: Column(
-        spacing: 16,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            spacing: 55,
-            children:[
-              IconButton(
-                onPressed: () {
-                  controller.showMap.value = false;
-                },
-                icon: Icon(Icons.arrow_back_ios_new_sharp,color:Colors.white, size: 22),
-              ),
-              Text(
-              "Create Service",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900,color: Colors.white),
-            ),
-           ],
-          ),
-          textFieldComponent.textFieldSearchComponent("Search Location", locationController,controller)
-        ],
-      ),
-        centerTitle: true,
-        toolbarHeight: 140,
-        backgroundColor: Color.fromRGBO(40, 168, 11, 1.0),
-      ),
+      appBar: !controller.showMap.value
+          ?appBarComponent.normalAppBar("Create Service",back: true)
+          :AppBarComponent.mapAppBar(
+          controller,
+          locationController,
+          textFieldComponent),
+
       body:!controller.showMap.value ? Container(
           color: Color.fromRGBO(250, 250, 250, 1.0),
           child:SingleChildScrollView(
@@ -106,14 +77,14 @@ class CreateService extends GetView<ServiceDetailViewModel> {
                         "Address",
                         controller.addressController,
                             (){
-                          controller.getCurrentPosition().then((_){
-                          if(controller.currentLocation.value != null){
+                          // controller.getCurrentPosition().then((_){
+                          // if(controller.currentLocation.value != null){
                             controller.showMap.value = true;
-                          }
-                            else{
-                                 print("Problem in fetching current location");
-                            }
-                          });},
+                          // }
+                          //   else{
+                          //        print("Problem in fetching current location");
+                          //   }
+                          },
                         address: true,
                         isLoading: controller.isMapLoading.value
 
@@ -131,17 +102,13 @@ class CreateService extends GetView<ServiceDetailViewModel> {
                     right: 10,
                     child: buttonsTheme.buttonThemeComponent(
                         "Next Step",
-                            (){
-                          controller.uploadData( nameController.text,
+                            ()async{
+                          if(await controller.uploadData( nameController.text,
                             priceController.text,
                             controller.addressController.text,
-                            detailController.text,);
-                          nameController.clear();
-                          priceController.clear();
-                          controller.addressController.clear();
-                          detailController.clear();
-                          controller.service.value="";
-                          controller.experianceLevel.value="";
+                            detailController.text,)){
+                            clearControllers();
+                          }
                         }
                     ),
                   ),
@@ -153,5 +120,13 @@ class CreateService extends GetView<ServiceDetailViewModel> {
       :mapView.flutterMapView(controller.currentLocation.value??LatLng(0.0, 0.0),(){
         controller.showMap.value=false;
       },controller,controller.addressData)));
+  }
+  void clearControllers(){
+    nameController.clear();
+    priceController.clear();
+    controller.addressController.clear();
+    detailController.clear();
+    controller.service.value="";
+    controller.experianceLevel.value="";
   }
 }
