@@ -92,7 +92,9 @@ ImageIconComponet imageIconComponet = ImageIconComponet();
                left: 10,
                right: 10,
                top: 570,
-               child:buttonThemes.buttonThemeComponent("Next Step",(){}) ),
+               child:buttonThemes.buttonThemeComponent("Next Step",(){
+                 Get.toNamed("/availability",arguments: userInfo);
+               }) ),
       ]),
     );
   }

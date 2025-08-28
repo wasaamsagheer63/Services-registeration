@@ -39,7 +39,7 @@ Future<List<UserInfo>> getData()async{
    return infoList;
   }
   else{
-    print("There is problem in getting data. This code is recieved: ${responce.statusCode}");
+    print("There is problem in getting data. This code is received: ${responce.statusCode}");
     return infoList;
   }
 }

@@ -39,11 +39,11 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: "/availability",
-          page: () => Availabilty(),
+          page: () => AvailabiltyView(),
           binding: AvailabilityBinding(),
         )
       ],
-      initialRoute: "/availability",
+      initialRoute: "/create_services",
     );
   }
 }

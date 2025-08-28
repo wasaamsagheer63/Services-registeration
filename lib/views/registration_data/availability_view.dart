@@ -3,29 +3,32 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_registeration/components/appbar_components.dart';
-import 'package:service_registeration/components/availability_chip_component.dart';
 import 'package:service_registeration/components/button_component.dart';
 import 'package:service_registeration/view_models/availability_viewmodel.dart';
 
-class Availabilty extends GetView<AvailabilityViewModel> {
+import '../../components/availability_components/availability_chip_component.dart';
+import '../../models/user_info.dart';
+
+class AvailabiltyView extends GetView<AvailabilityViewModel> {
   AppBarComponent appBarComponent = AppBarComponent();
   ButtonThemes buttonThemes = ButtonThemes();
   AvailabilityChipComponent availabilityChipComponent = AvailabilityChipComponent();
+  UserInfo userInfo = Get.arguments;
 
 
-  Availabilty({super.key});
+  AvailabiltyView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:appBarComponent.normalAppBar("Service Availability",back: true),
     body: Stack(
-       children: [SingleChildScrollView(
-
-         child: Padding(
+       children: [
+         SingleChildScrollView(
+           child: Padding(
            padding: EdgeInsets.all(16),
-           child: Column(
-             spacing: 7,
+           child: Obx(() => Column(
+             spacing: 10,
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
            Text("Availability",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w900),),
@@ -33,19 +36,20 @@ class Availabilty extends GetView<AvailabilityViewModel> {
                  style: TextStyle(
                      fontSize: 16,fontWeight: FontWeight.bold,
                      color: Colors.grey),),
-               SizedBox(height: 3,),
-               availabilityChipComponent.availabilityChipComponent("Monday"),
-               availabilityChipComponent.availabilityChipComponent("Tuesday"),
-               availabilityChipComponent.availabilityChipComponent("Wednesday"),
-               availabilityChipComponent.availabilityChipComponent("Thursday"),
-               availabilityChipComponent.availabilityChipComponent("Friday"),
-               availabilityChipComponent.availabilityChipComponent("Saturday"),
-               availabilityChipComponent.availabilityChipComponent("Sunday"),
-               SizedBox(height: 180,)
+               SizedBox(height: 2,),
+              availabilityChipComponent.availabilityChip("Monday",0,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Tuesday",1,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Wednesday",2,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Thursday",3,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Friday",4,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Saturday",5,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Sunday",6,userInfo ,controller),
+
+               SizedBox(height: 180,),
 
              ],
 
-           ),
+           )),
          ),
        ),
       Positioned(

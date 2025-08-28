@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:service_registeration/models/availability.dart';
 
 class UserInfo {
   String id;
@@ -10,6 +11,7 @@ class UserInfo {
   String detail;
   String? coverImageUrl;
  List<String> galleryImages = [];
+ List<Availability> availabilityOfDays = [];
 
 
   UserInfo(
@@ -33,6 +35,7 @@ class UserInfo {
       "detail": detail,
       "coverImageUrl":coverImageUrl,
       "galleryImages":galleryImages,
+      "availabilityOfDays":availabilityOfDays.map((item) => item.toMap()).toList(),
     };
   }
 
@@ -48,6 +51,7 @@ class UserInfo {
     );
     userInfo.coverImageUrl=map["coverImageUrl"] ;
     userInfo.galleryImages.addAll(List<String>.from(map["galleryImages"]??[]));
+    userInfo.availabilityOfDays.addAll(List<Availability>.from(map["availabilityOfDays"]??[]));
     return userInfo;
   }
 }
