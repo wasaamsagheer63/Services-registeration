@@ -59,11 +59,14 @@ class AvailabilityChipComponent{
                   children: [
                     timeSelectionRow.timeRow( availability.timingSlots[0].startTime,
                             (value){
-                          availability.timingSlots[0].endTime = controller.valueSelected(value, availability.timingSlots[0], 0, dayIndex, userInfo, availability);
-                        },availability.timingSlots[0].endTime,(value){
+                          availability.timingSlots[0].startTime = value;
+                          controller.uploadData(0,dayIndex,userInfo,availability.timingSlots[0], availability);
+                        controller.disableValues(availability);
+                          },availability.timingSlots[0].endTime,(value){
                           availability.timingSlots[0].endTime = value;
                           print("first end time${availability.timingSlots[0].endTime}");
                           controller.uploadData(0,dayIndex,userInfo,availability.timingSlots[0], availability);
+
                         }),
                     availability.timingSlots.length == 1?
                     Center(child: InkWell(
@@ -76,7 +79,9 @@ class AvailabilityChipComponent{
                         child: Icon(Icons.add)),)
 
                         :timeSelectionRow.timeRow(availability.timingSlots[1].startTime,(value){
-                      availability.timingSlots[1].endTime = controller.valueSelected(value,availability.timingSlots[1] , 1, dayIndex, userInfo, availability);
+                      availability.timingSlots[1].startTime = value;
+                      controller.uploadData(1,dayIndex,userInfo, availability.timingSlots[1], availability);
+                      controller.disableValues(availability);
                     },availability.timingSlots[1].endTime,(value){
                       availability.timingSlots[1].endTime = value;
                       controller.uploadData(1,dayIndex,userInfo, availability.timingSlots[1], availability);
@@ -93,8 +98,10 @@ class AvailabilityChipComponent{
                         child: Icon(Icons.add)),)
                         :availability.timingSlots.length ==3 ? timeSelectionRow.timeRow(availability.timingSlots[2].startTime,
                             (value){
-                              availability.timingSlots[2].endTime = controller.valueSelected(value, availability.timingSlots[2], 2, dayIndex, userInfo, availability);
-                    },availability.timingSlots[2].endTime,(value){
+                              availability.timingSlots[2].startTime = value;
+                              controller.uploadData(2,dayIndex,userInfo, availability.timingSlots[2], availability);
+                              controller.disableValues(availability);
+                            },availability.timingSlots[2].endTime,(value){
                           availability.timingSlots[2].endTime = value;
                       controller.uploadData(2,dayIndex,userInfo, availability.timingSlots[2], availability);
                     }):SizedBox.shrink()

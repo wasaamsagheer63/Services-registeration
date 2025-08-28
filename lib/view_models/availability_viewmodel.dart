@@ -13,7 +13,7 @@ RxList<String> timeValues = ["00:00","01:00","02:00","03:00","04:00","05:00",
   "06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00",
   "15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"].obs;
 
-  RxList<String> selectedTimeValues =<String>[].obs;
+  RxList<String> disabledTimeValues =<String>[].obs;
 
 
   RxBool secondSlot = false.obs;
@@ -33,6 +33,9 @@ void chooseAvailability(){
 
   String? nextTimeValue(String startTime) {
   print("previus value ${startTime}");
+  if(startTime == "23:00"){
+    return "00:00";
+  }else{
     int startingHour = int.tryParse(startTime.substring(0,2))??0;
     for(var value in timeValues) {
       int endingHour = int.tryParse(value.substring(0, 2)) ?? 0;
@@ -43,6 +46,7 @@ void chooseAvailability(){
       }
     }
     return null;
+}
 }
 
 
@@ -61,9 +65,7 @@ void chooseAvailability(){
 
 
     print("before uploadation: ${userInfo.availabilityOfDays[dayIndex].toMap()}");
-
     userInfo.availabilityOfDays[dayIndex] = availability;
-    selectedTimeSlots(availability);
     addSlot(userInfo);
     update();
   }
@@ -80,17 +82,58 @@ void chooseAvailability(){
     }
   }
 
-  void selectedTimeSlots(Availability availability){
-  availability.timingSlots.map((slot){
-    int startRange = int.tryParse(slot.startTime.substring(0,2))!;
-    int endRange = int.tryParse(slot.endTime.substring(0,2))!;
+
+
+  void disableValues(Availability availability) {
+  disabledTimeValues.value = [];
+  if(availability.timingSlots.length ==1){
+    String value = availability.timingSlots[0].endTime;
+    int endingValue = int.tryParse(value.substring(0,2))!;
     for(var value in timeValues){
-      int data =int.tryParse(value.substring(0,2))!;
-      if(data >= startRange && data <= endRange){
-        selectedTimeValues.add(value);
+      int convertedValue = int.tryParse(value.substring(0,2))!;
+      if(endingValue <= convertedValue ){
+        disabledTimeValues.add(value);
       }
     }
-  } ).toList();
+    print("Range value for first time : $disabledTimeValues");
+
+  }
+  if(availability.timingSlots.length ==2){
+    String value = availability.timingSlots[0].endTime;
+    int endingValue = int.tryParse(value.substring(0,2))!;
+
+    String value2 = availability.timingSlots[1].endTime;
+    int endingValue2 = int.tryParse(value2.substring(0,2))!;
+
+    for(var value in timeValues){
+      int convertedValue = int.tryParse(value.substring(0,2))!;
+      if(convertedValue <= endingValue || convertedValue >= endingValue2 ){
+        disabledTimeValues.add(value);
+      }
+    }
+    print("Range value for second time : $disabledTimeValues");
+
+
+  }
+
+
+  if(availability.timingSlots.length ==3){
+    String value = availability.timingSlots[1].endTime;
+    int endingValue = int.tryParse(value.substring(0,2))!;
+
+    String value2 = availability.timingSlots[2].endTime;
+    int endingValue2 = int.tryParse(value2.substring(0,2))!;
+
+    for(var value in timeValues){
+      int convertedValue = int.tryParse(value.substring(0,2))!;
+      if(convertedValue <= endingValue || convertedValue >= endingValue2 ){
+        disabledTimeValues.add(value);
+      }
+    }
+    print("Range value for third time : $disabledTimeValues");
+
+
+  }
   }
 
 

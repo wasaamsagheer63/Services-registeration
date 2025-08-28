@@ -34,12 +34,13 @@ class TimeSelectionChip{
                 maxHeight: 200,
                 padding: EdgeInsets.zero
               ),
-
+              value: timeHint,
               items:availabilityViewModel.timeValues.map((time) => DropdownMenuItem(
                   value: time,
 
                   child: Text(time,style: TextStyle(color: Colors.black),))).toList()
-              , onChanged:(value)=>onChanged(value),
+              , onChanged:(value)=>onChanged(value)
+
 
           ),
         )
