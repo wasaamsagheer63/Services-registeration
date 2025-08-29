@@ -3,7 +3,6 @@ import 'package:service_registeration/models/availability.dart';
 
 class UserInfo {
   String id;
-  String name;
   String service;
   String experienceLevel;
   num pricePerHour;
@@ -16,7 +15,6 @@ class UserInfo {
 
   UserInfo(
     this.id,
-    this.name,
     this.service,
     this.experienceLevel,
     this.pricePerHour,
@@ -27,7 +25,6 @@ class UserInfo {
   Map<String, dynamic> toMap() {
     return {
       "id":id,
-      "name": name,
       "service": service,
       "experienceLevel": experienceLevel,
       "pricePerHour": pricePerHour,
@@ -47,7 +44,6 @@ class UserInfo {
       map["experienceLevel"],
       map["pricePerHour"],
       map["address"],
-      map["detail"],
     );
     userInfo.coverImageUrl=map["coverImageUrl"] ;
     userInfo.galleryImages.addAll(List<String>.from(map["galleryImages"]??[]));

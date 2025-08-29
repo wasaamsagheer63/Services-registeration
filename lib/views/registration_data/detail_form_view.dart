@@ -10,7 +10,6 @@ import '../../components/textfield_component.dart';
 import '../../view_models/detail_form_viewmodel.dart';
 
 class CreateService extends GetView<ServiceDetailViewModel> {
-  TextEditingController nameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController detailController = TextEditingController();
   TextEditingController locationController = TextEditingController();
@@ -18,7 +17,7 @@ class CreateService extends GetView<ServiceDetailViewModel> {
   ButtonThemes buttonsTheme = ButtonThemes();
   TextFieldComponent textFieldComponent = TextFieldComponent();
   List<String> services = ["Electrician","Plumber","Carpenter"];
-  List<String> experianceLevels = ["Biggner","Intermediate","Expert"];
+  List<String> experianceLevels = ["Beginner","Intermediate","Expert"];
   MapView mapView = MapView();
   AppBarComponent appBarComponent = AppBarComponent();
 
@@ -53,12 +52,6 @@ class CreateService extends GetView<ServiceDetailViewModel> {
                           fontSize: 21,
                           fontWeight: FontWeight.w700,
                         ),
-                      ),
-                      textFieldComponent.textFieldGeneralComponent(
-                          "Enter Name",
-                          nameController,
-                              (){}
-
                       ),
                       buttonsTheme.dropDownComponent(services,"Select Service",controller.service,(value){
                         controller.service.value = value.toString() ?? "";
@@ -97,16 +90,16 @@ class CreateService extends GetView<ServiceDetailViewModel> {
                     ],
                   ),
                   Positioned(
-                    top: MediaQuery.of(context).size.height * 0.77,
+                    top: MediaQuery.of(context).size.height * 0.68,
+                    bottom: 2,
                     left: 10,
                     right: 10,
                     child: buttonsTheme.buttonThemeComponent(
                         "Next Step",
                             ()async{
-                          if(await controller.uploadData( nameController.text,
+                          if(await controller.uploadData(
                             priceController.text,
-                            controller.addressController.text,
-                            detailController.text,)){
+                            controller.addressController.text,detailController.text)){
                             clearControllers();
                           }
                         }
@@ -122,7 +115,6 @@ class CreateService extends GetView<ServiceDetailViewModel> {
       },controller,controller.addressData)));
   }
   void clearControllers(){
-    nameController.clear();
     priceController.clear();
     controller.addressController.clear();
     detailController.clear();

@@ -41,7 +41,7 @@ class ImageIconComponet{
       return
       InkWell(
         onTap: (){
-          print("inde:$index");
+          print("index:$index");
           controller.galleryDeleteIcon(index);
         },
         child: Stack(

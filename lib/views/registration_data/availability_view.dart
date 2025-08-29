@@ -13,7 +13,7 @@ class AvailabiltyView extends GetView<AvailabilityViewModel> {
   AppBarComponent appBarComponent = AppBarComponent();
   ButtonThemes buttonThemes = ButtonThemes();
   AvailabilityChipComponent availabilityChipComponent = AvailabilityChipComponent();
-  UserInfo userInfo = Get.arguments;
+  UserInfo  userInfo = Get.arguments;
 
 
   AvailabiltyView({super.key});
@@ -27,7 +27,7 @@ class AvailabiltyView extends GetView<AvailabilityViewModel> {
          SingleChildScrollView(
            child: Padding(
            padding: EdgeInsets.all(16),
-           child: Obx(() => Column(
+           child: Column(
              spacing: 10,
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
@@ -37,13 +37,13 @@ class AvailabiltyView extends GetView<AvailabilityViewModel> {
                      fontSize: 16,fontWeight: FontWeight.bold,
                      color: Colors.grey),),
                SizedBox(height: 2,),
-              availabilityChipComponent.availabilityChip("Monday",0,userInfo ,controller),
-              availabilityChipComponent.availabilityChip("Tuesday",1,userInfo ,controller),
-              availabilityChipComponent.availabilityChip("Wednesday",2,userInfo ,controller),
-              availabilityChipComponent.availabilityChip("Thursday",3,userInfo ,controller),
-              availabilityChipComponent.availabilityChip("Friday",4,userInfo ,controller),
-              availabilityChipComponent.availabilityChip("Saturday",5,userInfo ,controller),
-              availabilityChipComponent.availabilityChip("Sunday",6,userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Monday",0, userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Tuesday",1, userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Wednesday",2, userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Thursday",3, userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Friday",4, userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Saturday",5, userInfo ,controller),
+              availabilityChipComponent.availabilityChip("Sunday",6, userInfo ,controller),
 
                SizedBox(height: 180,),
 
@@ -51,7 +51,7 @@ class AvailabiltyView extends GetView<AvailabilityViewModel> {
 
            )),
          ),
-       ),
+
       Positioned(
           bottom:0,
           left:0,
@@ -68,7 +68,7 @@ class AvailabiltyView extends GetView<AvailabilityViewModel> {
             left: 10,
             right: 10,
             top: 500,
-            child:buttonThemes.simpleButtonThemeComponent("Save darft",(){}) ),
+            child:buttonThemes.simpleButtonThemeComponent("Save Unpublish",(){}) ),
         Positioned(
             bottom: 35,
             left: 10,

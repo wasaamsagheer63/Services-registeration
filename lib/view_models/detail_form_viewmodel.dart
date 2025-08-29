@@ -89,7 +89,6 @@ List<Location> location = await locationFromAddress(query);
 
 
   Future<bool> uploadData(
-    String name,
     String price,
     String address,
     String detail,
@@ -97,7 +96,7 @@ List<Location> location = await locationFromAddress(query);
 emptyData = false;
 correctPrice = true;
     try{
-if(name.isEmpty || price.toString().isEmpty || address.isEmpty || detail.isEmpty || service.value.isEmpty || experianceLevel.value.isEmpty){
+if(price.toString().isEmpty || address.isEmpty || detail.isEmpty || service.value.isEmpty || experianceLevel.value.isEmpty){
   emptyData = true;
 }
 if(num.tryParse(price) == null && price.length != 0){
@@ -112,7 +111,7 @@ if(num.tryParse(price) == null && price.length != 0){
     ),
   ));
 }
-      UserInfo userInfo = UserInfo("",name, service.value, experianceLevel.value, num.tryParse(price)??0.0, address, detail);
+      UserInfo userInfo = UserInfo("", service.value, experianceLevel.value, num.tryParse(price)??0.0, address, detail);
      if(!emptyData && correctPrice){
       userInfoClient.uploadData(userInfo);
       Get.toNamed("/upload_image",arguments: userInfo);

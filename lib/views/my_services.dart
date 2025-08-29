@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_registeration/components/title_chip_component.dart';
 import 'package:service_registeration/view_models/services_viewmodel.dart';
 
 class MyServices extends GetView<ServicesViewModel> {
-  const MyServices({super.key});
+  final TitleChipComponent titleChipComponent = TitleChipComponent();
+   MyServices({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +23,9 @@ class MyServices extends GetView<ServicesViewModel> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                appChipComponent("Published", 1,isClicked: controller.checkDataofChip("Published")),
-                appChipComponent("Unpublished", 0,isClicked: controller.checkDataofChip("Unpublished")),
-                appChipComponent("Draft", 1,isClicked: controller.checkDataofChip("Draft")),
+                titleChipComponent.appChipComponent("Published", 1,controller,isClicked: controller.checkDataofChip("Published")),
+                titleChipComponent.appChipComponent("Unpublished", 0,controller,isClicked: controller.checkDataofChip("Unpublished")),
+                titleChipComponent.appChipComponent("Draft", 1,controller,isClicked: controller.checkDataofChip("Draft")),
               ],
             )
           ],
@@ -31,39 +33,6 @@ class MyServices extends GetView<ServicesViewModel> {
       ),
     );
   }
-  Widget appChipComponent(String name, int count,{bool isClicked = false}){
-    return SizedBox(
-      height:33,
-      child: InkWell(
-        onTap: (){
-          controller.enterDataofChip(name);
-        },
-        child: Chip(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-           backgroundColor :isClicked ?Color.fromRGBO(
-             32,
-             170,
-             6,
-             1.0,
-           ):Color.fromRGBO(
-             211,
-             213,
-             210,
-             0.2,
-           ),
-            label: Row(
-              spacing: 6,
-          children: [
-            Text(name,style: TextStyle(color:isClicked ? Colors.white: Colors.black,fontSize: 11.5),),
 
-            CircleAvatar(
-              radius: 8,
-              child: Text(count.toString(),style: TextStyle(fontSize: 8,fontWeight: FontWeight.bold),),
-            )
-          ],
-        )),
-      ),
-    );
-  }
 }
 

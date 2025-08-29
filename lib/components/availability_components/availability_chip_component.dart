@@ -9,15 +9,29 @@ import 'package:service_registeration/view_models/availability_viewmodel.dart';
 
 class AvailabilityChipComponent{
   TimeSelectionRow timeSelectionRow = TimeSelectionRow();
-  Widget availabilityChip(String day,int dayIndex,UserInfo userInfo,AvailabilityViewModel controller){
-    Availability availability = Availability(day, controller.isAvailable.value);
-    Timings timings = Timings("00:00", "01:00");
-    return  GetBuilder<AvailabilityViewModel>(builder: (controller){
+  Widget availabilityChip(String day,int dayIndex, UserInfo  userInfo,AvailabilityViewModel controller){
+
+    return GetBuilder<AvailabilityViewModel>(builder: (controller){
+
+      Availability availability;
+
+      if (dayIndex < userInfo.availabilityOfDays.length && userInfo.availabilityOfDays[dayIndex].day == day) {
+        availability =  userInfo.availabilityOfDays[dayIndex];
+      } else {
+        while ( userInfo.availabilityOfDays.length <= dayIndex) {
+           userInfo.availabilityOfDays.add(Availability("", false));
+        }
+        availability = Availability(day, false);
+         userInfo.availabilityOfDays[dayIndex] = availability;
+      }
+
+      Timings timings = Timings("00:00", "01:00");
+
       return InkWell(
         onTap: () {
           if(availability.isAvailable == false){
             availability.isAvailable = true;
-            controller.uploadData(0, dayIndex, userInfo, timings, availability);
+            controller.uploadData(0, dayIndex,  userInfo, timings, availability);
           }
         },
         child: Container(
@@ -36,84 +50,130 @@ class AvailabilityChipComponent{
                     Text(day,
                       style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),),
                     Switch(
-                        inactiveTrackColor: Color.fromRGBO(
-                          160, 163, 160, 0.4,),
+                        inactiveTrackColor: Color.fromRGBO(160, 163, 160, 0.4,),
                         inactiveThumbColor: Colors.white,
                         trackOutlineColor: WidgetStatePropertyAll(Colors.white),
-                        activeTrackColor: Color.fromRGBO(
-                          1, 138, 1, 0.6,),
-                        value:availability.isAvailable,
+                        activeTrackColor: Color.fromRGBO(1, 138, 1, 0.6,),
+                        value: availability.isAvailable,
                         onChanged: (value) {
                           print(value);
                           availability.isAvailable = !availability.isAvailable;
                           print("after click");
                           print(availability.isAvailable);
-                          availability.isAvailable ==true?
-                          controller.uploadData(0, dayIndex, userInfo, timings, availability)
-                              :null;
+                          if(availability.isAvailable == true){
+                            controller.uploadData(0, dayIndex,  userInfo, timings, availability);
+                          } else {
+                            availability.timingSlots.clear();
+                            controller.addSlot( userInfo);
+                            controller.update();
+                          }
                         })
                   ],
                 ),
-                availability.isAvailable == true?Column(
 
+                availability.isAvailable == true && availability.timingSlots.isNotEmpty ? Column(
                   children: [
-                    timeSelectionRow.timeRow( availability.timingSlots[0].startTime,
-                            (value){
-                          availability.timingSlots[0].startTime = value;
-                          controller.uploadData(0,dayIndex,userInfo,availability.timingSlots[0], availability);
-                        controller.disableValues(availability);
-                          },availability.timingSlots[0].endTime,(value){
-                          availability.timingSlots[0].endTime = value;
-                          print("first end time${availability.timingSlots[0].endTime}");
-                          controller.uploadData(0,dayIndex,userInfo,availability.timingSlots[0], availability);
+                    if (availability.timingSlots.length > 0)
+                      timeSelectionRow.timeRow(
+                          availability.timingSlots[0].startTime,
+                              (value){
+                            availability.timingSlots[0].startTime = value;
+                            controller.uploadData(0,dayIndex, userInfo,availability.timingSlots[0], availability);
+                          },
+                          availability.timingSlots[0].endTime,
+                              (value){
+                            availability.timingSlots[0].endTime = value;
+                            print("first end time${availability.timingSlots[0].endTime}");
+                            controller.uploadData(0,dayIndex, userInfo,availability.timingSlots[0], availability);
+                          },
+                          controller,
+                              (){
+                            if(availability.timingSlots.isNotEmpty) {
+                              availability.timingSlots.removeAt(0);
 
-                        }),
-                    availability.timingSlots.length == 1?
+                              if(availability.timingSlots.isEmpty) {
+                                availability.isAvailable = false;
+                                controller.addSlot( userInfo);
+                                controller.update();
+                              } else {
+                                controller.uploadData(0, dayIndex,  userInfo, availability.timingSlots[0], availability);
+                              }
+                            }
+                          },
+                          availability,
+                          0
+                      ),
+
+                    availability.timingSlots.length == 1 ?
                     Center(child: InkWell(
                         onTap: (){
                           Timings timings = Timings("02:00", "03:00");
                           timings.startTime = controller.nextTimeValue(availability.timingSlots[0].endTime)!;
-                          timings.endTime= controller.nextTimeValue(timings.startTime)!;
-                          controller.uploadData(1, dayIndex, userInfo,timings, availability);
+                          timings.endTime = controller.nextTimeValue(timings.startTime)!;
+                          controller.uploadData(1, dayIndex,  userInfo,timings, availability);
                         },
-                        child: Icon(Icons.add)),)
+                        child: Icon(Icons.add)))
+                        : availability.timingSlots.length >= 2 ?
+                    timeSelectionRow.timeRow(
+                        availability.timingSlots[1].startTime,
+                            (value){
+                          availability.timingSlots[1].startTime = value;
+                          controller.uploadData(1,dayIndex, userInfo, availability.timingSlots[1], availability);
+                        },
+                        availability.timingSlots[1].endTime,
+                            (value){
+                          availability.timingSlots[1].endTime = value;
+                          controller.uploadData(1,dayIndex, userInfo, availability.timingSlots[1], availability);
+                        },
+                        controller,
+                            (){
+                          if(availability.timingSlots.length > 1) {
+                            availability.timingSlots.removeAt(1);
+                            controller.uploadData(0, dayIndex,  userInfo, availability.timingSlots[0], availability);
+                          }
+                        },
+                        availability,
+                        1
+                    ) : SizedBox.shrink(),
 
-                        :timeSelectionRow.timeRow(availability.timingSlots[1].startTime,(value){
-                      availability.timingSlots[1].startTime = value;
-                      controller.uploadData(1,dayIndex,userInfo, availability.timingSlots[1], availability);
-                      controller.disableValues(availability);
-                    },availability.timingSlots[1].endTime,(value){
-                      availability.timingSlots[1].endTime = value;
-                      controller.uploadData(1,dayIndex,userInfo, availability.timingSlots[1], availability);
-                    }),
-
-                    availability.timingSlots.length==2 ?
+                    availability.timingSlots.length == 2 ?
                     Center(child: InkWell(
                         onTap: (){
                           Timings timings = Timings("04:00","05:00");
                           timings.startTime = controller.nextTimeValue(availability.timingSlots[1].endTime)!;
-                          timings.endTime= controller.nextTimeValue(timings.startTime)!;
-                          controller.uploadData(2, dayIndex, userInfo, timings, availability);
+                          timings.endTime = controller.nextTimeValue(timings.startTime)!;
+                          controller.uploadData(2, dayIndex,  userInfo, timings, availability);
                         },
-                        child: Icon(Icons.add)),)
-                        :availability.timingSlots.length ==3 ? timeSelectionRow.timeRow(availability.timingSlots[2].startTime,
+                        child: Icon(Icons.add)))
+                        : availability.timingSlots.length >= 3 ?
+                    timeSelectionRow.timeRow(
+                        availability.timingSlots[2].startTime,
                             (value){
-                              availability.timingSlots[2].startTime = value;
-                              controller.uploadData(2,dayIndex,userInfo, availability.timingSlots[2], availability);
-                              controller.disableValues(availability);
-                            },availability.timingSlots[2].endTime,(value){
+                          availability.timingSlots[2].startTime = value;
+                          controller.uploadData(2,dayIndex, userInfo, availability.timingSlots[2], availability);
+                        },
+                        availability.timingSlots[2].endTime,
+                            (value){
                           availability.timingSlots[2].endTime = value;
-                      controller.uploadData(2,dayIndex,userInfo, availability.timingSlots[2], availability);
-                    }):SizedBox.shrink()
+                          controller.uploadData(2,dayIndex, userInfo, availability.timingSlots[2], availability);
+                        },
+                        controller,
+                            (){
+                          if(availability.timingSlots.length > 2) {
+                            availability.timingSlots.removeAt(2);
+                            controller.uploadData(1, dayIndex,  userInfo, availability.timingSlots[1], availability);
+                          }
+                        },
+                        availability,
+                        2
+                    ) : SizedBox.shrink()
                   ],
-                ):SizedBox.shrink(),
-
+                ) : SizedBox.shrink(),
               ],
             ),
           ),
         ),
-
-      );});
-    }
+      );
+    });
   }
-
+}

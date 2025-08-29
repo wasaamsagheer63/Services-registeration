@@ -30,6 +30,7 @@ void onInit(){
   }
   void deleteGalleryImages(UserInfo userInfo,int indexValue){
     userInfo.galleryImages.removeAt(indexValue);
+    userInfoClient.updateData(userInfo);
     iconIndex.value=-1;
     update();
   }
