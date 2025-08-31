@@ -10,14 +10,12 @@ import '../../components/textfield_component.dart';
 import '../../view_models/detail_form_viewmodel.dart';
 
 class CreateService extends GetView<ServiceDetailViewModel> {
-  TextEditingController priceController = TextEditingController();
-  TextEditingController detailController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
 
-  ButtonThemes buttonsTheme = ButtonThemes();
-  TextFieldComponent textFieldComponent = TextFieldComponent();
-  List<String> services = ["Electrician","Plumber","Carpenter"];
-  List<String> experianceLevels = ["Beginner","Intermediate","Expert"];
+
+  final ButtonThemes buttonsTheme = ButtonThemes();
+  final TextFieldComponent textFieldComponent = TextFieldComponent();
+ final  List<String> services = ["Electrician","Plumber","Carpenter","Painter","House Cleaning","Pest Control","Appliance Repair","Baby Sitter","Tutor"];
+  final List<String> experienceLevels = ["Beginner","Intermediate","Expert"];
   MapView mapView = MapView();
   AppBarComponent appBarComponent = AppBarComponent();
 
@@ -31,7 +29,7 @@ class CreateService extends GetView<ServiceDetailViewModel> {
           ?appBarComponent.normalAppBar("Create Service",back: true)
           :AppBarComponent.mapAppBar(
           controller,
-          locationController,
+          controller.locationController,
           textFieldComponent),
 
       body:!controller.showMap.value ? Container(
@@ -57,34 +55,39 @@ class CreateService extends GetView<ServiceDetailViewModel> {
                         controller.service.value = value.toString() ?? "";
 
                       },service: true),
-                      buttonsTheme.dropDownComponent(experianceLevels,"Select Experiance",controller.experianceLevel,(value){
+                      buttonsTheme.dropDownComponent(experienceLevels,"Select Experience",controller.experianceLevel,(value){
                         controller.experianceLevel.value = value.toString() ?? "";
                       }),
                       textFieldComponent.textFieldGeneralComponent(
                           "Price per hour",
-                          priceController,
+                          controller.priceController,
                               (){},
                           price: true
                       ),
-                      textFieldComponent.textFieldGeneralComponent(
-                        "Address",
-                        controller.addressController,
-                            (){
-                          // controller.getCurrentPosition().then((_){
-                          // if(controller.currentLocation.value != null){
-                            controller.showMap.value = true;
-                          // }
-                          //   else{
-                          //        print("Problem in fetching current location");
-                          //   }
+                      InkWell(
+                        onTap: (){
+                          controller.showMap.value = true;
                           },
-                        address: true,
-                        isLoading: controller.isMapLoading.value
+                        child: textFieldComponent.textFieldGeneralComponent(
+                          "Address",
+                          controller.addressController,
+                              (){
+                            // controller.getCurrentPosition().then((_){
+                            // if(controller.currentLocation.value != null){
+                              controller.showMap.value = true;
+                            // }
+                            //   else{
+                            //        print("Problem in fetching current location");
+                            //   }
+                            },
+                          address: true,
+                          isLoading: controller.isMapLoading.value
 
+                        ),
                       ),
                       textFieldComponent.textFieldforDetailComponent(
                         "Service Details",
-                        detailController,
+                        controller.detailController,
                       ),
                       SizedBox(height: 60),
                     ],
@@ -95,11 +98,11 @@ class CreateService extends GetView<ServiceDetailViewModel> {
                     left: 10,
                     right: 10,
                     child: buttonsTheme.buttonThemeComponent(
-                        "Next Step",
+                        controller.forUpdate.value != null?"Update Service":"Next Step",
                             ()async{
                           if(await controller.uploadData(
-                            priceController.text,
-                            controller.addressController.text,detailController.text)){
+                            controller.priceController.text,
+                            controller.addressController.text,controller.detailController.text)){
                             clearControllers();
                           }
                         }
@@ -115,9 +118,9 @@ class CreateService extends GetView<ServiceDetailViewModel> {
       },controller,controller.addressData)));
   }
   void clearControllers(){
-    priceController.clear();
+    controller.priceController.clear();
     controller.addressController.clear();
-    detailController.clear();
+    controller.detailController.clear();
     controller.service.value="";
     controller.experianceLevel.value="";
   }

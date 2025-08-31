@@ -45,6 +45,7 @@ void onInit(){
       final coverImageUrl = await imageUploadingClient.uploadImage(
           image.value!.path);
       userInfo.coverImageUrl = coverImageUrl.url;
+      userInfo.category = "unpublished";
       userInfoClient.updateData(userInfo);
       update();
     }
@@ -67,6 +68,7 @@ void onInit(){
 
   Future<void> deleteImage(UserInfo userInfo) async {
     userInfo.coverImageUrl = null;
+    userInfo.category="draft";
     userInfoClient.updateData(userInfo);
     showIcon.value = false;
     iconIndex.value = -1;

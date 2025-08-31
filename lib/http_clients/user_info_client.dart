@@ -9,7 +9,7 @@ class UserInfoClient{
   UserInfoClient({
     this.userInfoEndPoint = "https://6848562eec44b9f34940977c.mockapi.io/user_info/s1/registration_form",});
 
-Future<void> uploadData(UserInfo userInfo)async{
+Future<bool> uploadData(UserInfo userInfo)async{
   try{
   final responce = await http.post(Uri.parse(userInfoEndPoint),
   headers: {'Content-Type':'application/json'},);
@@ -18,9 +18,11 @@ Future<void> uploadData(UserInfo userInfo)async{
     userInfo.id = data['id'];
     updateData(userInfo);
     print("User Informataion is successfully stored");
+    return true;
   }
   else{
     print("This issue is causing data to not stored:${responce.statusCode}");
+    return false;
   }
   }
    catch(e){
@@ -44,7 +46,7 @@ Future<List<UserInfo>> getData()async{
   }
 }
 
-  Future<void> updateData(UserInfo userInfo)async {
+  Future<bool> updateData(UserInfo userInfo)async {
   try {
     final responce = await http.put(
         Uri.parse('$userInfoEndPoint/${userInfo.id}'),
@@ -52,13 +54,33 @@ Future<List<UserInfo>> getData()async{
         body: jsonEncode(userInfo.toMap()));
     if (responce.statusCode == 200) {
       print("Data is successfully updated");
+      return true;
     }
     else {
       print("Data is not updated ${responce.statusCode}");
+      return false;
     }
   }
   catch(e){
     throw Exception("Error in updating ${e.toString()}");
   }
+  }
+
+  Future<bool> deleteData(UserInfo userInfo)async {
+    try {
+      final responce = await http.delete(
+          Uri.parse('$userInfoEndPoint/${userInfo.id}'));
+      if (responce.statusCode == 200) {
+        print("Data is successfully deleted");
+        return true;
+      }
+      else {
+        print("Data is not deleted ${responce.statusCode}");
+        return false;
+      }
+    }
+    catch(e){
+      throw Exception("Error in deleting ${e.toString()}");
+    }
   }
 }

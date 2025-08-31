@@ -32,7 +32,7 @@ class ButtonThemes{
   }
 
 
-  Widget dropDownComponent(List<String> totalValues,String hintText, RxString selectedValue, Function(RxString?) onChanged,{bool service=false }){
+  Widget dropDownComponent(List<String> totalValues,String hintText, RxString selectedValue, Function(String?) onChanged,{bool service=false }){
 
     return DropdownButtonFormField(
       icon: service?SizedBox.shrink():null,
@@ -49,7 +49,7 @@ class ButtonThemes{
           filled: true,
         ),
       borderRadius: BorderRadius.circular(15),
-        value: selectedValue.isEmpty ? null: selectedValue.value,
+        value: selectedValue.isEmpty ?null: selectedValue.value,
         isExpanded:true,
         hint: Text(hintText,style: TextStyle(color:Colors.grey,fontSize:16,fontWeight: FontWeight.bold),),
         items:totalValues.map((item) => DropdownMenuItem(
@@ -62,16 +62,18 @@ class ButtonThemes{
   Widget simpleButtonThemeComponent(
 
       String buttonText,
-      Function onPressed,){
+      Function onPressed,{
+        bool delete = false
+  }){
     return Container(
       decoration: BoxDecoration(
-        border: BoxBorder.all(width: 3,color:Color.fromRGBO(
+        border: BoxBorder.all(width: 3,color:delete == true ? Colors.red :Color.fromRGBO(
           3, 131, 3, 0.6,),),
         borderRadius: BorderRadius.circular(30),
       ),
 
       child: ElevatedButton(onPressed: ()=>onPressed(),
-        child: Text(buttonText,style: TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:Color.fromRGBO(
+        child: Text(buttonText,style: TextStyle(fontSize:16,fontWeight:FontWeight.w900,color:delete == true ? Colors.red:Color.fromRGBO(
           4, 138, 4, 0.6,)),),
         style: ElevatedButton.styleFrom(
           backgroundColor:Color.fromRGBO(

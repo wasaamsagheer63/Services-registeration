@@ -8,6 +8,7 @@ import '../view_models/services_viewmodel.dart';
 
 class AvailabilityBinding extends Bindings{
   void dependencies(){
+    Get.put(UserInfoClient());
     Get.put(AvailabilityViewModel());
   }
 }

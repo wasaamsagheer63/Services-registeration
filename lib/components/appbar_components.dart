@@ -16,7 +16,7 @@ class AppBarComponent{
       backgroundColor: Color.fromRGBO(250, 250, 250, 1.0),
       leading: back?IconButton(
         onPressed: () {
-          Get.back();
+          Get.offAllNamed("/services");
         },
         icon: Icon(Icons.arrow_back_ios_new_sharp, size: 22),
       ):Icon(Icons.add,color:Colors.transparent),

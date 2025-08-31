@@ -9,7 +9,8 @@ class TitleChipComponent{
       height:33,
       child: InkWell(
         onTap: (){
-          controller.enterDataofChip(name);
+          controller.enterDataOfChip(name.toLowerCase());
+          controller.getData();
         },
         child: Chip(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),

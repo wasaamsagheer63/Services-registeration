@@ -8,6 +8,7 @@ class UserInfo {
   num pricePerHour;
   String address;
   String detail;
+  String category = "draft";
   String? coverImageUrl;
  List<String> galleryImages = [];
  List<Availability> availabilityOfDays = [];
@@ -20,6 +21,7 @@ class UserInfo {
     this.pricePerHour,
     this.address,
     this.detail,
+    this.category,
   );
 
   Map<String, dynamic> toMap() {
@@ -30,6 +32,7 @@ class UserInfo {
       "pricePerHour": pricePerHour,
       "address": address,
       "detail": detail,
+      "category": category,
       "coverImageUrl":coverImageUrl,
       "galleryImages":galleryImages,
       "availabilityOfDays":availabilityOfDays.map((item) => item.toMap()).toList(),
@@ -39,15 +42,18 @@ class UserInfo {
   static UserInfo fromMap(Map<String, dynamic> map) {
     UserInfo userInfo = UserInfo(
       map["id"],
-      map["name"],
       map["service"],
       map["experienceLevel"],
       map["pricePerHour"],
       map["address"],
+      map["detail"],
+      map["category"]
     );
     userInfo.coverImageUrl=map["coverImageUrl"] ;
     userInfo.galleryImages.addAll(List<String>.from(map["galleryImages"]??[]));
-    userInfo.availabilityOfDays.addAll(List<Availability>.from(map["availabilityOfDays"]??[]));
+    userInfo.availabilityOfDays.addAll((
+        map["availabilityOfDays"]??[])
+        .map<Availability>((day) => Availability.fromMap(day)).toList());
     return userInfo;
   }
 }

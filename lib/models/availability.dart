@@ -18,7 +18,7 @@ class Availability{
 
   static Availability fromMap(Map<String, dynamic> map) {
     Availability availability =Availability(map["day"], map["isAvailable"]);
-    availability.timingSlots.addAll(List<Timings>.from(map["timingSlots"]??[]));
+    availability.timingSlots.addAll((map["timingSlots"]??[]).map<Timings>((time) => Timings.fromMap(time)).toList());
     return availability;
   }
 

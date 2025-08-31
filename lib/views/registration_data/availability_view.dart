@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_registeration/components/appbar_components.dart';
 import 'package:service_registeration/components/button_component.dart';
+import 'package:service_registeration/models/availability.dart';
 import 'package:service_registeration/view_models/availability_viewmodel.dart';
 
 import '../../components/availability_components/availability_chip_component.dart';
@@ -68,13 +69,50 @@ class AvailabiltyView extends GetView<AvailabilityViewModel> {
             left: 10,
             right: 10,
             top: 500,
-            child:buttonThemes.simpleButtonThemeComponent("Save Unpublish",(){}) ),
+            child:buttonThemes.simpleButtonThemeComponent("Save Unpublish",()async{
+              if(userInfo.coverImageUrl != null) {
+                userInfo.category = "unpublished";
+              }
+              if(await controller.addSlot(userInfo)){
+    List<Availability> availability = [];
+    userInfo.availabilityOfDays.map((map){
+    if(map.timingSlots.isNotEmpty){
+    availability.add(map);
+    }
+    }).toList();
+    if(availability.isNotEmpty) {
+      Get.offNamed("/services", arguments: "unpublished");
+    }else{
+                Get.snackbar("Error","First choose Time Slot then Unpublish");
+
+    }
+              }
+            }) ),
         Positioned(
             bottom: 35,
             left: 10,
             right: 10,
             top: 570,
-            child:buttonThemes.buttonThemeComponent("Next Step",(){}) )
+            child:buttonThemes.buttonThemeComponent("Next Step",()async{
+              if(userInfo.coverImageUrl != null ) {
+                userInfo.category = "published";
+              }
+            print(userInfo);
+            if(await controller.addSlot(userInfo)){
+              List<Availability> availability = [];
+              userInfo.availabilityOfDays.map((map){
+                if(map.timingSlots.isNotEmpty){
+                  availability.add(map);
+                }
+              }).toList();
+              if(availability.isNotEmpty) {
+                Get.offNamed("/services", arguments: "published");
+              }
+              else{
+                Get.snackbar("Error","First choose Time Slot then Publish");
+              }
+            }
+            }) )
       ],
     ),
     );

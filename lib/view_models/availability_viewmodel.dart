@@ -21,14 +21,24 @@ class AvailabilityViewModel extends GetxController{
     isAvailable.value = !isAvailable.value;
   }
 
-  Future<void> addSlot( UserInfo   userInfo)async {
-    await   userInfoClient.updateData(  userInfo);
-    update();
-    print("Data is uploaded");
+  Future<bool> addSlot( UserInfo   userInfo)async {
+    try{
+    if(await userInfoClient.updateData(userInfo)) {
+      update();
+      print("Data is uploaded");
+      return true;
+    }
+    else{
+      return false;
+    }
+    }
+  catch(e){
+      throw Exception(e.toString());
+  }
   }
 
   String? nextTimeValue(String startTime) {
-    print("previus value ${startTime}");
+    print("previous value ${startTime}");
     if(startTime == "23:00"){
       return "00:00";
     }else{

@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           binding: AvailabilityBinding(),
         )
       ],
-      initialRoute: "/create_services",
+      initialRoute: "/services",
     );
   }
 }
